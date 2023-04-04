@@ -8,6 +8,7 @@
 #include <cctype>
 #include <iomanip>
 #include <limits>
+#include <fstream>
 
 class Song {
     friend std::ostream& operator<<(std::ostream& os, const Song& s);
@@ -45,11 +46,13 @@ std::ostream& operator<<(std::ostream& os, const Song& s) {
 }
 
 void display_menu() {
-    std::cout << "\nF - Play First Song" << std::endl;
+    std::cout << std::endl;
+    std::cout << "F - Play First Song" << std::endl;
     std::cout << "N - Play Next song" << std::endl;
     std::cout << "P - Play Previous song" << std::endl;
     std::cout << "A - Add and play a new Song at current location" << std::endl;
     std::cout << "L - List the current playlist" << std::endl;
+    std::cout << "S - Save Playlist" << std::endl;
     std::cout << "===============================================" << std::endl;
     std::cout << "Enter a selection (Q to quit): ";
 }
@@ -57,15 +60,19 @@ void display_menu() {
 void play_current_song(const Song& song) {
     // This function should display 
     // Playing: followed by the song that is playing
-
-    std::cout << "You implement this function" << std::endl;
+    std::cout << std::endl;
+    std::cout << "Now Playing: " << std::endl;
+    std::cout << "*" << song << std::endl;
 }
 
 void display_playlist(const std::list<Song>& playlist, const Song& current_song) {
     // This function should display the current playlist 
     // and then the current song playing.
-
-    std::cout << "You implement this function" << std::endl;
+    std::cout << std::endl;
+    for (auto &c : playlist)
+        std::cout << c << std::endl;
+    std::cout << "Current song:" << std::endl;
+    std::cout << "*" <<  current_song << std::endl;
 }
 
 int main() {
@@ -80,10 +87,86 @@ int main() {
     };
 
     std::list<Song>::iterator current_song = playlist.begin();
+   
+    char choice{};
+    
+    do {
+        display_menu();
+        std::cin >> choice; 
 
-    std::cout << "To be implemented" << std::endl;
-    // Your program logic goes here
+        switch (choice)
+        {
+        case 'f':
+        case 'F': {
+            current_song = playlist.begin();
+            play_current_song(*current_song);
+            break; 
+        }
+        case 'n':
+        case 'N': {
+            current_song++; 
+            if (current_song == playlist.end())
+                current_song = playlist.begin();
+            play_current_song(*current_song);
+            break; 
+        }
+        case 'p':
+        case 'P': {
+            if (current_song == playlist.begin())
+            {
+                current_song = playlist.end(); 
+                current_song--; 
+            }
+            else
+                current_song--; 
+            play_current_song(*current_song);
+            break;
+        }
+        case 'a':
+        case 'A': {
+            std::cin.ignore();
+            std::cout << std::endl;
+            std::cout << "Please enter a song name to add: ";  
+            std::string name{};
+            std::getline(std::cin, name); 
+            std::cout << "\nPlease enter the artist's name: "; 
+            std::string artist{};
+            std::getline(std::cin, artist); 
+            std::cout << "\nPlease enter a rating: "; 
+            int rating{}; 
+            std::cin >> rating; 
+            std::cout << std::endl;
+            playlist.emplace(current_song, name, artist, rating);
+            current_song--; 
+            play_current_song(*current_song);
+            break;
+        }
+        case 'l':
+        case 'L': {
+            std::cout << std::endl;
+            std::cout << "The current playlist is: " << std::endl;
+            display_playlist(playlist, *current_song);
+            break;
+        }
+        case 's':
+        case 'S': {
+            std::ofstream out_file{ "songs.txt" };
+            if (!out_file)
+                std::cerr << "Couldn't open write file" << std::endl;
 
+            for (auto c : playlist) {
+                out_file << c.get_name() << std::endl;
+                out_file << c.get_artist() << std::endl;
+                out_file << c.get_rating() << std::endl;
+            }
+
+            std::cout << "Playlist Saved!" << std::endl;
+            out_file.close();
+        }
+
+        }
+    } while (choice != 'q' && choice != 'Q');
+    
     std::cout << "Thanks for listening!" << std::endl;
     return 0;
 }

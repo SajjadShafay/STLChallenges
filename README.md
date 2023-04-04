@@ -1,6 +1,6 @@
-STL Challenge  
-Challenge 2  
-Using std::list  
+# STL Challenge  
+## Challenge 2  
+## Using std::list  
 
 In this challenge you will create a menu driven application that  
 will simulate a user playing songs from a playlist of songs.  
