@@ -9,6 +9,7 @@
 #include <iomanip>
 #include <limits>
 #include <fstream>
+#include <sstream>
 
 class Song {
     friend std::ostream& operator<<(std::ostream& os, const Song& s);
@@ -75,19 +76,23 @@ void display_playlist(const std::list<Song>& playlist, const Song& current_song)
     std::cout << "*" <<  current_song << std::endl;
 }
 
+void load_file(std::ifstream &read_file, std::list<Song>& ls); 
+void case_f(std::list<Song>::iterator& curr_song, std::list<Song>& ls); 
+void case_n(std::list<Song>::iterator& curr_song, std::list<Song>& ls); 
+void case_p(std::list<Song>::iterator& curr_song, std::list<Song>& ls); 
+void case_a(std::list<Song>::iterator& curr_song, std::list<Song>& ls); 
+void case_l(std::list<Song>::iterator& curr_song, std::list<Song>& ls); 
+void case_s(std::ofstream &write_file, std::list<Song>& ls); 
+
 int main() {
 
-    std::list<Song> playlist{
-            {"God's Plan",        "Drake",                     5},
-            {"Never Be The Same", "Camila Cabello",            5},
-            {"Pray For Me",       "The Weekend and K. Lamar",  4},
-            {"The Middle",        "Zedd, Maren Morris & Grey", 5},
-            {"Wait",              "Maroone 5",                 4},
-            {"Whatever It Takes", "Imagine Dragons",           3}
-    };
+    std::list<Song> playlist{};
+    std::ifstream in_file{ "songs.txt" };
 
+    load_file(in_file, playlist); 
+    
     std::list<Song>::iterator current_song = playlist.begin();
-   
+
     char choice{};
     
     do {
@@ -98,70 +103,34 @@ int main() {
         {
         case 'f':
         case 'F': {
-            current_song = playlist.begin();
-            play_current_song(*current_song);
+            case_f(current_song, playlist); 
             break; 
         }
         case 'n':
         case 'N': {
-            current_song++; 
-            if (current_song == playlist.end())
-                current_song = playlist.begin();
-            play_current_song(*current_song);
+            case_n(current_song, playlist); 
             break; 
         }
         case 'p':
         case 'P': {
-            if (current_song == playlist.begin())
-            {
-                current_song = playlist.end(); 
-                current_song--; 
-            }
-            else
-                current_song--; 
-            play_current_song(*current_song);
+            case_p(current_song, playlist); 
             break;
         }
         case 'a':
         case 'A': {
-            std::cin.ignore();
-            std::cout << std::endl;
-            std::cout << "Please enter a song name to add: ";  
-            std::string name{};
-            std::getline(std::cin, name); 
-            std::cout << "\nPlease enter the artist's name: "; 
-            std::string artist{};
-            std::getline(std::cin, artist); 
-            std::cout << "\nPlease enter a rating: "; 
-            int rating{}; 
-            std::cin >> rating; 
-            std::cout << std::endl;
-            playlist.emplace(current_song, name, artist, rating);
-            current_song--; 
-            play_current_song(*current_song);
+            case_a(current_song, playlist); 
             break;
         }
         case 'l':
         case 'L': {
-            std::cout << std::endl;
-            std::cout << "The current playlist is: " << std::endl;
-            display_playlist(playlist, *current_song);
+            case_l(current_song, playlist); 
             break;
         }
         case 's':
         case 'S': {
-            std::ofstream out_file{ "songs.txt" };
-            if (!out_file)
-                std::cerr << "Couldn't open write file" << std::endl;
-
-            for (auto c : playlist) {
-                out_file << c.get_name() << std::endl;
-                out_file << c.get_artist() << std::endl;
-                out_file << c.get_rating() << std::endl;
-            }
-
-            std::cout << "Playlist Saved!" << std::endl;
-            out_file.close();
+            std::ofstream out_file{ "songs.txt" }; 
+            case_s(out_file, playlist); 
+            break; 
         }
 
         }
@@ -169,4 +138,89 @@ int main() {
     
     std::cout << "Thanks for listening!" << std::endl;
     return 0;
+}
+
+
+void load_file(std::ifstream& read_file, std::list<Song>& ls) {
+   
+    if (!read_file)
+        std::cerr << "Could not open read file" << std::endl;
+
+    std::string name{}, artist{}, temp_rating{};
+    int rating{}; 
+
+    while (std::getline(read_file, name) && std::getline(read_file, artist) && std::getline(read_file, temp_rating))
+    {
+        std::istringstream convertor{ temp_rating };
+        convertor >> rating;
+
+        Song new_song(name, artist, rating);
+        ls.push_back(new_song);
+    }
+}
+
+void case_f(std::list<Song>::iterator& curr_song, std::list<Song>& ls) {
+    curr_song = ls.begin();
+    play_current_song(*curr_song);
+}
+
+void case_n(std::list<Song>::iterator& curr_song, std::list <Song>& ls) {
+    curr_song++;
+    if (curr_song == ls.end())
+        curr_song = ls.begin();
+    play_current_song(*curr_song);
+}
+
+void case_p(std::list<Song>::iterator& curr_song, std::list<Song>& ls) {
+    if (curr_song == ls.begin())
+    {
+        curr_song = ls.end();
+        curr_song--;
+    }
+    else
+        curr_song--;
+    play_current_song(*curr_song);
+}
+
+void case_a(std::list<Song>::iterator& curr_song, std::list<Song>& ls) {
+    //get rid of the leftover newline character from previous input
+    std::string leftover; 
+    std::getline(std::cin, leftover);
+    std::cout << std::endl;
+    std::cout << "Please enter a song name to add: ";
+    std::string a_name{};
+    std::getline(std::cin, a_name);
+    std::cout << "\nPlease enter the artist's name: ";
+    std::string a_artist{};
+    std::getline(std::cin, a_artist);
+    std::cout << "\nPlease enter a rating: ";
+    std::string a_temp_rating{};
+    std::getline(std::cin, a_temp_rating);
+    std::istringstream a_convertor{ a_temp_rating };
+    int a_rating{};
+    a_convertor >> a_rating;
+    std::cout << std::endl;
+    ls.emplace(curr_song, a_name, a_artist, a_rating);
+    curr_song--;
+    play_current_song(*curr_song);
+}
+
+void case_l(std::list<Song>::iterator& curr_song, std::list<Song>& ls) {
+    std::cout << std::endl;
+    std::cout << "The current playlist is: " << std::endl;
+    display_playlist(ls, *curr_song);
+}
+
+void case_s(std::ofstream& write_file, std::list<Song>& ls) {
+    if (!write_file)
+        std::cerr << "Couldn't open write file" << std::endl;
+
+    for (auto c : ls) {
+        write_file << c.get_name() << std::endl;
+        write_file << c.get_artist() << std::endl;
+        write_file << c.get_rating() << std::endl;
+    }
+
+    std::cout << "Playlist Saved!" << std::endl;
+    write_file.close();
 }
