@@ -1,40 +1,49 @@
-# STL Challenges  
-## Challenge 1 - Deque Challenge  
+STL Challenge  
+Challenge 2  
+Using std::list  
 
-A Palindrome is a string that reads the same backwards or forwards.  
-Simple examples are:  
-madam  
-bob  
-toot  
-radar  
+In this challenge you will create a menu driven application that  
+will simulate a user playing songs from a playlist of songs.  
 
-An entire phrase can also be a palindome, for example:  
-A Toyota's a toyota  
-A Santa at NASA  
-A man, a plan, a cat, a ham, a yak, a yam, a hat, a canal-Panama!  
+We will use a list to simulate the user selecting the the first song in the playlist and  
+then selecting next and previous to play forward of backwards through the  
+playlist.  
 
-For the purposes of this assignment we will only consider alpha characters and omit all other characters.  
-We will also not be considering case.  
-So,  
-A Santa at Nasa, will be processed as:  
-ASANTAATNASA  
+Please refer to the video demo run.  
 
-A common method to solve this problem is to compare the string to its reverse and  
-if the are equal then it must be a palindrome. But we will use a deque.  
+We will also allow users to add new song to the playlist and they  
+will be added prior to the currently playing song.  
+The menu looks as follows:  
 
-I am providing the main driver for you which will automatically run several test cases.  
-You challenge is to write the following function:  
+F - Play First Song  
+N - Play Next song  
+P - Play Previous song  
+A - Add and play a new Song at current location  
+L - List the current playlist  
+========================  
+Enter a selection (Q to quit):  
 
-bool is_palindrome(const std::string &s) {  
+And the available playlist is modeled as a std::list<Song>  
+I will provide the Song class. Following are the songs in the playlist.  
+I grabbed these from the pop charts, you can use them or change  
+them to any songs you wish.  
 
-This function will expect a string and it must determine if that string is a palindrome and return true if it is, or false if it is not.  
+God's Plan                  Drake                                       5  
+Never Be The Same   Camila Cabello                         5  
+Pray For Me               The Weekend and K. Lamar      4  
+The Middle                Zedd, Maren Morris & Grey     5  
+Wait                           Maroone 5                                4  
+Whatever It Takes      Imagine Dragons                      3  
 
-So,  
+I have provided the starting project.  
+Have fun!  
 
-is_palindrome("A Santa at Nasa");   will return true  
-is_palindrome("Hello");   will return false  
+Note:  
+If you have trouble reading input, you can clear std::cin and  
+ignore everything in the buffer with:  
 
-Please use a deque to solve the problem.  
+std::cin.clear();  
+std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');  
 
-If you need a hint, please as in the Q/A.  
-Good luck and have fun!  
+Make sure you #include <limits> to use it.  
+
