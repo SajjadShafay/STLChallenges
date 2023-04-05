@@ -77,6 +77,8 @@ void part1() {
                 else {
                     words.insert(std::make_pair(word, 1));
                 }
+                //alternate way
+                //words[word]++; 
             }
         }
 
