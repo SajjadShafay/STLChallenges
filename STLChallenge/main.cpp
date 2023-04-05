@@ -59,12 +59,26 @@ std::string clean_string(const std::string& s) {
 
 void part1() {
     std::map<std::string, int> words;
-    std::string line;
-    std::string word;
-    std::ifstream in_file{ "../words.txt" };
+    std::string line{};
+    std::string word{};
+    std::ifstream in_file{ "words.txt" };
     if (in_file) {
 
         // You implement this code
+
+        while (std::getline(in_file, line)) {
+            line = clean_string(line); 
+            std::istringstream ss{ line }; 
+            while (ss >> word) {
+                auto it = words.find(word);
+                if (it != words.end()) {
+                    words.at(word) += 1;
+                }
+                else {
+                    words.insert(std::make_pair(word, 1));
+                }
+            }
+        }
 
         in_file.close();
         display_words(words);
@@ -78,12 +92,26 @@ void part1() {
 // set of line numbers in which the word appears
 void part2() {
     std::map<std::string, std::set<int>> words;
-    std::string line;
-    std::string word;
-    std::ifstream in_file{ "../words.txt" };
+    std::string line{};
+    std::string word{};
+    int line_count{}; 
+    std::ifstream in_file{ "words.txt" };
     if (in_file) {
 
         // You implement this code
+        while (std::getline(in_file, line)) {
+            line_count++; 
+            line = clean_string(line); 
+            std::istringstream ss{ line }; 
+            while (ss >> word) {
+                auto it = words.find(word); 
+                if (it != words.end())
+                    it->second.insert(line_count); 
+                else {
+                    words[word].insert(line_count);
+                }
+            }
+        }
 
         in_file.close();
         display_words(words);
