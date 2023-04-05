@@ -1,49 +1,67 @@
 # STL Challenge  
-## Challenge 2  
-## Using std::list  
+## Challenge 3  
+Using std::set and std::map  
 
-In this challenge you will create a menu driven application that  
-will simulate a user playing songs from a playlist of songs.  
+This challenge has 2 parts.  
+We will be reading words from a text file provided to you.  
+The text file is named 'words.txt' and contains the fist few  
+paragraphs from the book, "The Wonderful Wizard of Oz", by  
+L. Frank Baum.  
 
-We will use a list to simulate the user selecting the the first song in the playlist and  
-then selecting next and previous to play forward of backwards through the  
-playlist.  
+Part 1:  
 
-Please refer to the video demo run.  
+For part 1 of this challenge, you are to display each unique word  
+in the file and immediately following each word display the number  
+of time it occurs in the text file.  
 
-We will also allow users to add new song to the playlist and they  
-will be added prior to the currently playing song.  
-The menu looks as follows:  
+The words should be displayed in ascending order.  
 
-F - Play First Song  
-N - Play Next song  
-P - Play Previous song  
-A - Add and play a new Song at current location  
-L - List the current playlist  
-========================  
-Enter a selection (Q to quit):  
+Here is a sample listing of the first few words:  
 
-And the available playlist is modeled as a std::list<Song>  
-I will provide the Song class. Following are the songs in the playlist.  
-I grabbed these from the pop charts, you can use them or change  
-them to any songs you wish.  
+Word         Count  
+===================  
+Aunt                 5  
+Dorothy           8  
+Dorothy's         1  
+Em                   5  
+Even                1  
+From               1  
 
-God's Plan                  Drake                                       5  
-Never Be The Same   Camila Cabello                         5  
-Pray For Me               The Weekend and K. Lamar      4  
-The Middle                Zedd, Maren Morris & Grey     5  
-Wait                           Maroone 5                                4  
-Whatever It Takes      Imagine Dragons                      3  
+Please use a map with <string, int> Key/ Value pairs  
 
-I have provided the starting project.  
-Have fun!  
+============================================  
+Part 2:  
 
-Note:  
-If you have trouble reading input, you can clear std::cin and  
-ignore everything in the buffer with:  
+For part 2 of this challenge, you are to display each unique word  
+in the file and immediately following each word display the line numbers  
+in which that word appears.  
 
-std::cin.clear();  
-std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');  
+The words should be displayed in ascending order and the line numbers for  
+each word should also be displayed in ascending order.  
+If a word appears more than once on a line then the line number should  
+only appear once.  
 
-Make sure you #include <limits> to use it.  
+Here is a sample listing of the first few words:  
 
+Word       Occurrences  
+============================  
+Aunt            [ 2 7 25 29 48 ]  
+Dorothy      [ 1 7 15 29 39 43 47 51 ]  
+Dorothy's   [ 31 ]  
+Em              [ 2 7 25 30 48 ]  
+Even           [ 19 ]  
+From          [ 50 ]  
+
+Please use a map of <string,set<int>> Key/Value pairs  
+
+Hint: consider using stringstream to process words  
+once you read in a line from the file.  
+
+Note: I have provided the basic shell for your program.  
+I have also provided the functions that display the maps  
+as well as the function that cleans the words read.  
+You should call the clean_string function for every word  
+you read from the file.  
+
+Good luck and have fun!!!  
+Don't over think this one -- use the STL!  
